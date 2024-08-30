@@ -20,7 +20,7 @@ const uploadFile = (file, folder) => {
   });
 };
 
-const createProduct = async (req, res) => {
+export const createProduct = async (req, res) => {
   try {
     const { name, description, category, tags, originalPrice, discountPrice, stock, shopId } = req.body;
 
@@ -68,4 +68,54 @@ const createProduct = async (req, res) => {
   }
 };
 
-export default createProduct;
+export const updatedProduct =  async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const { name, price, description, category, tags, originalPrice, discountPrice, shopId } = req.body;
+
+    // Handle file upload
+    let imagePath = '';
+    if (req.files && req.files.image) {
+      const image = req.files.image;
+      const uploadPath = path.join(__dirname, '../uploads', image.name);
+      await image.mv(uploadPath);
+      imagePath = uploadPath;
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(productId, {
+      name,
+      price,
+      description,
+      category,
+      tags,
+      originalPrice,
+      discountPrice,
+      shopId,
+      image: imagePath || undefined // Only update if a new image is uploaded
+    }, { new: true });
+
+    if (!updatedProduct) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+    res.status(200).json({ success: true, product: updatedProduct });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+}
+
+// get all the products
+export const getProduct = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found." });
+    }
+
+    res.status(200).json({ product });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while fetching the product.", error: error.message });
+  }
+};
