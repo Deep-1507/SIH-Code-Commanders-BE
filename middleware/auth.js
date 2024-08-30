@@ -1,6 +1,6 @@
 import {errorHandler} from "../utils/error.js";
 import  verify from "jsonwebtoken";
-import shop from "../models/shop.js";
+import shop from "../api/models/shop.js";
 
 
 export const isSeller = async(req,res,next) => {

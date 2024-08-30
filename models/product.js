@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
 
-const productSchema = new mongoose.Schema({
+const productSchema = new Schema({
   name: {
     type: String,
     required: [true, "Please enter your product name!"],
@@ -23,31 +23,24 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: [true, "Please enter your product price!"],
   },
-  images: [
-    {
-      public_id: {
-        type: String,
-        required: true,
-      },
-      url: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
+  stock: {
+    type: Number,
+  },
+  image: {
+    url: {
+      type: String,
+      // required: true,
+    }
+  },
   shopId: {
-    type: String,
+    type: Schema.Types.ObjectId, // Assuming shopId is an ObjectId
+    ref: 'Shop',
     required: true,
   },
-  shop: {
-    type: Object,
-    required: true,
-  },
-
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
 });
 
-module.exports = mongoose.model("Product", productSchema);
+export default model("Product", productSchema);
