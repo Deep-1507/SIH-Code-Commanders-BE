@@ -46,7 +46,7 @@ export const createShop = async (req, res, next) => {
       });
   
     } catch (error) {
-      return next(errorHandler(error.message, 400));
+      return next(new errorHandler(error.message, 400));
     }
   }
 
@@ -78,26 +78,28 @@ export const loginShop =
       const { email, password } = req.body;
 
       if (!email || !password) {
-        return next(errorHandler("Please provide all fields!", 400));
+        return next(new errorHandler("Please provide all fields!", 400));
       }
 
       const user = await shop.findOne({ email }).select("+password");
 
       if (!user) {
-        return next(errorHandler("User doesn't exist!", 400));
+        return next(new errorHandler("User doesn't exist!", 400));
       }
 
       const isPasswordValid = await user.comparePassword(password);
 
       if (!isPasswordValid) {
-        return next(errorHandler("Invalid email or password", 400));
+        return next(new errorHandler("Invalid email or password", 400));
       }
 
       sendShopToken(user, 200, res); // Changed statusCode to 200 for successful login
     } catch (error) {
-      return next( errorHandler(error.message, 500));
+      return next( new errorHandler(error.message, 500));
     }
   }
+
+
 
 
 // // load shop

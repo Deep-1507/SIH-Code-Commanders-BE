@@ -27,11 +27,10 @@ const productSchema = new Schema({
     type: Number,
   },
   image: {
-    url: {
+    
       type: String,
       // required: true,
-    }
-  },
+    },
   shopId: {
     type: Schema.Types.ObjectId, // Assuming shopId is an ObjectId
     ref: 'Shop',

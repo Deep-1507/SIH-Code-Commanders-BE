@@ -12,7 +12,7 @@ export const test = (req, res) => {
 
 export const updateUser = async (req, res, next) => {
   if (req.user.id !== req.params.id) {
-    return next(errorHandler(401, 'You can update only your account!'));
+    return next(new errorHandler(401, 'You can update only your account!'));
   }
   try {
     if (req.body.password) {
@@ -44,7 +44,7 @@ export const updateUser = async (req, res, next) => {
 
 export const deleteUser = async (req, res, next) => {
   if (req.user.id !== req.params.id) {
-    return next(errorHandler(401, 'You can delete only your account!'));
+    return next(new errorHandler(401, 'You can delete only your account!'));
   }
   try {
     await User.findByIdAndDelete(req.params.id);
